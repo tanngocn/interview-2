@@ -26,6 +26,7 @@ body, html{
     left: 0%;
     display: flex;
     flex-wrap: nowrap;
+    touch-action: pan-y;
   }
   #items.shifting {
     transition: left .6s ease-out;

@@ -23,7 +23,7 @@ function slide(wrapper, items, prev, next) {
   items.onmousedown = dragStart;
 
   // Touch events
-  items.addEventListener("touchstart", dragStart, { passive: false } );
+  items.addEventListener("touchstart", dragStart, { passive: false });
   items.addEventListener("touchend", dragEnd);
   items.addEventListener("touchmove", dragAction);
 
@@ -46,7 +46,9 @@ function slide(wrapper, items, prev, next) {
 
   function dragStart(e) {
     e = e || window.event;
-    e.preventDefault();
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     posInitial = items.offsetLeft;
 
     if (e.type == "touchstart") {
@@ -58,6 +60,9 @@ function slide(wrapper, items, prev, next) {
     }
   }
   function dragAction(e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     e = e || window.event;
 
     if (e.type == "touchmove") {
@@ -71,6 +76,9 @@ function slide(wrapper, items, prev, next) {
   }
 
   function dragEnd(e) {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     posFinal = items.offsetLeft;
     if (posFinal - posInitial < -threshold) {
       shiftSlide(1, "drag");
@@ -81,7 +89,6 @@ function slide(wrapper, items, prev, next) {
     }
     document.onmouseup = null;
     document.onmousemove = null;
-
   }
 
   function shiftSlide(dir, action) {
