@@ -81,6 +81,8 @@ function slide(wrapper, items, prev, next) {
     }
     document.onmouseup = null;
     document.onmousemove = null;
+    document.removeEventListener("touchend", removeListeners);
+
   }
 
   function shiftSlide(dir, action) {
