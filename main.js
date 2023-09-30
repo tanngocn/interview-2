@@ -37,9 +37,8 @@ function slide(wrapper, items, prev, next) {
 
   window.addEventListener("resize", () => {
     slideSize = items.getElementsByClassName("slide")[0].clientWidth;
-    (threshold = slideSize / 20),
-      (items.style.webkitTransform =
-        "translateX(" + -slideSize * index + "px)");
+    threshold = slideSize / 20;
+    items.style.left = -slideSize * index + "px";
   });
 
   // Transition events
