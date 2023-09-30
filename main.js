@@ -25,7 +25,7 @@ function slide(wrapper, items, prev, next) {
   // Touch events
   items.addEventListener("touchstart", dragStart);
   items.addEventListener("touchend", dragEnd);
-  items.addEventListener("touchmove", dragAction);
+  items.addEventListener("touchmove", dragAction, { passive: false });
 
   // Click events
   prev.addEventListener("click", function () {
@@ -50,9 +50,9 @@ function slide(wrapper, items, prev, next) {
     posInitial = items.offsetLeft;
 
     if (e.type == "touchstart") {
-      posX1 = e.touches[0].pageX;
+      posX1 = e.touches[0].clientX;
     } else {
-      posX1 = e.pageX;
+      posX1 = e.clientX;
       document.onmouseup = dragEnd;
       document.onmousemove = dragAction;
     }
@@ -61,11 +61,11 @@ function slide(wrapper, items, prev, next) {
     e = e || window.event;
 
     if (e.type == "touchmove") {
-      posX2 = posX1 - e.touches[0].pageX;
-      posX1 = e.touches[0].pageX;
+      posX2 = posX1 - e.touches[0].clientX;
+      posX1 = e.touches[0].clientX;
     } else {
-      posX2 = posX1 - e.pageX;
-      posX1 = e.pageX;
+      posX2 = posX1 - e.clientX;
+      posX1 = e.clientX;
     }
     items.style.left = items.offsetLeft - posX2 + "px";
   }
