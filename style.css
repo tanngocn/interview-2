@@ -26,10 +26,10 @@ body, html{
     left: 0%;
     display: flex;
     flex-wrap: nowrap;
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
   }
   #items.shifting {
-    transition: left .6s ease-out;
+    transition: left .4s ease-out;
   }
   .slide {
     min-width: 100%;

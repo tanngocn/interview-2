@@ -23,8 +23,8 @@ function slide(wrapper, items, prev, next) {
   items.onmousedown = dragStart;
 
   // Touch events
-  items.addEventListener("touchstart", dragStart, { passive: false });
-  items.addEventListener("touchend", dragEnd, { passive: false });
+  items.addEventListener("touchstart", dragStart);
+  items.addEventListener("touchend", dragEnd);
   items.addEventListener("touchmove", dragAction);
 
   // Click events
@@ -45,7 +45,7 @@ function slide(wrapper, items, prev, next) {
   items.addEventListener("transitionend", checkIndex);
 
   function dragStart(e) {
-    e = e || window.event;
+    e = e || window.e;
 
     posInitial = items.offsetLeft;
 
@@ -59,7 +59,7 @@ function slide(wrapper, items, prev, next) {
   }
   function dragAction(e) {
    
-    e = e || window.event;
+    e = e || window.e;
 
     if (e.type == "touchmove") {
       posX2 = posX1 - e.touches[0].clientX;
@@ -72,9 +72,7 @@ function slide(wrapper, items, prev, next) {
   }
 
   function dragEnd(e) {
-    if (e.cancelable) {
-        e.preventDefault();
-      }
+
     posFinal = items.offsetLeft;
     if (posFinal - posInitial < -threshold) {
       shiftSlide(1, "drag");
