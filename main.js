@@ -23,9 +23,9 @@ function slide(wrapper, items, prev, next) {
   items.onmousedown = dragStart;
 
   // Touch events
-  items.addEventListener("touchstart", dragStart, { passive: false });
-  items.addEventListener("touchend", dragEnd, { passive: false });
-  items.addEventListener("touchmove", dragAction, { passive: false });
+  items.addEventListener("touchstart", dragStart);
+  items.addEventListener("touchend", dragEnd);
+  items.addEventListener("touchmove", dragAction);
 
   // Click events
   prev.addEventListener("click", function () {
