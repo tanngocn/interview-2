@@ -23,7 +23,7 @@ function slide(wrapper, items, prev, next) {
   items.onmousedown = dragStart;
 
   // Touch events
-  items.addEventListener("touchstart", dragStart);
+  items.addEventListener("touchstart", dragStart, { passive: false } );
   items.addEventListener("touchend", dragEnd);
   items.addEventListener("touchmove", dragAction);
 
@@ -81,7 +81,6 @@ function slide(wrapper, items, prev, next) {
     }
     document.onmouseup = null;
     document.onmousemove = null;
-    document.removeEventListener("touchend", removeListeners);
 
   }
 
@@ -107,7 +106,6 @@ function slide(wrapper, items, prev, next) {
         }
       }
     }
-
     allowShift = false;
   }
 
