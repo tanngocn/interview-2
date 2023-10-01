@@ -1,19 +1,19 @@
-var sliderItems = document.getElementById("items"),
-  prev = document.getElementById("prev"),
-  next = document.getElementById("next"),
-  slideSize = sliderItems.getElementsByClassName("slide")[0].offsetWidth;
-// get our elements
 const slider = document.querySelector(".items"),
-  slides = Array.from(document.querySelectorAll(".slide"));
+  slides = Array.from(document.querySelectorAll(".slide")),
+  prev = document.getElementById("prev"),
+  next = document.getElementById("next");
+let slideSize = slider.offsetWidth;
+const wrapper = document.getElementById("items");
+
 // set up our state
 let isDragging = false,
   startPos = 0,
   currentTranslate = 0,
   prevTranslate = 0,
   animationID,
-  threshold =  slideSize /10,
+  threshold = slideSize / 10,
   currentIndex = 0;
-
+checkIndex();
 // add our event listeners
 slides.forEach((slide, index) => {
   // pointer events
@@ -22,6 +22,9 @@ slides.forEach((slide, index) => {
   slide.addEventListener("pointerleave", pointerUp);
   slide.addEventListener("pointermove", pointerMove);
 });
+
+window.addEventListener("resize", startPositionIndex);
+wrapper.addEventListener("transitionend", checkIndex);
 
 // Click events
 prev.addEventListener("click", function () {
@@ -32,10 +35,10 @@ next.addEventListener("click", function () {
 });
 
 function shiftSlide(dir, action) {
-  items.classList.add("shifting");
+  wrapper.classList.add("shifting");
   if (isDragging) {
     if (!action) {
-      posInitial = items.offsetLeft;
+      posInitial = wrapper.offsetLeft;
     }
     if (dir == 1) {
       if (currentIndex !== slides.length - 1) {
@@ -49,23 +52,48 @@ function shiftSlide(dir, action) {
       }
     }
   }
-  startPositionIndex();
   isDragging = false;
+  setPositionByIndex();
 }
-
-window.addEventListener("resize", startPositionIndex);
-
-// Transition events
-sliderItems.addEventListener("transitionend", checkIndex);
 
 function startPositionIndex() {
-  slideSize = sliderItems.getElementsByClassName("slide")[0].clientWidth;
+  slideSize = slider.offsetWidth;
   threshold = slideSize / 20;
-  sliderItems.style.left = -slideSize * currentIndex + "px";
+  slider.style.left = -slideSize * currentIndex + "px";
+}
+function pointerDown(index) {
+  return function (event) {
+    console.log(event.clientX)
+    currentIndex = index;
+    startPos = event.clientX;
+    isDragging = true;
+    animationID = requestAnimationFrame(animation);
+    wrapper.classList.add("shifting");
+  };
 }
 
+function pointerMove(event) {
+  if (isDragging) {
+    const currentPosition = event.clientX;
+    currentTranslate = prevTranslate + currentPosition - startPos;
+  }
+}
+
+function pointerUp() {
+  const movedBy = currentTranslate - prevTranslate;
+
+  // if moved enough negative then snap to next slide if there is one
+  if (movedBy < -threshold && currentIndex < slides.length - 1) shiftSlide(1);
+
+  // if moved enough positive then snap to previous slide if there is one
+  if (movedBy > threshold && currentIndex > 0) shiftSlide(-1);
+
+  setPositionByIndex();
+  
+}
 function checkIndex() {
-  items.classList.remove("shifting");
+  cancelAnimationFrame(animationID);
+  isDragging = true;
 
   if (currentIndex === 0) {
     prev.classList.add("disabled");
@@ -81,40 +109,8 @@ function checkIndex() {
     next.classList.remove("disabled");
     prev.classList.remove("disabled");
   }
-  isDragging = true;
-}
-
-function pointerDown(index) {
-  return function (event) {
-    currentIndex = index;
-    startPos = event.clientX;
-    isDragging = true;
-    animationID = requestAnimationFrame(animation);
-    slider.classList.add("shifting");
-  };
-}
-
-function pointerMove(event) {
-  if (isDragging) {
-    const currentPosition = event.clientX;
-    currentTranslate = prevTranslate + currentPosition - startPos;
-  }
-}
-
-function pointerUp() {
-  cancelAnimationFrame(animationID);
-  isDragging = false;
-  const movedBy = currentTranslate - prevTranslate;
-
-  // if moved enough negative then snap to next slide if there is one
-  if (movedBy < -threshold && currentIndex < slides.length - 1) currentIndex += 1;
-
-  // if moved enough positive then snap to previous slide if there is one
-  if (movedBy > threshold && currentIndex > 0) currentIndex -= 1;
-
-  setPositionByIndex();
-  checkIndex();
-  slider.classList.remove("shifting");
+  //
+  wrapper.classList.remove("shifting");
 }
 
 function setPositionByIndex() {

@@ -54,27 +54,24 @@ body, html{
   }
   .prev,
   .next {
-    background-size: 22px;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #007aff;
     cursor: pointer;
   }
 
   .next.disabled, .prev.disabled {
     cursor: not-allowed;
     opacity: 0.4;
+    outline: none;
   }
   .prev {
 
-    border-top: 4px solid ;
-    border-left: 4px solid ; 
+    border-top: 4px solid  #007aff;
+    border-left: 4px solid  #007aff; 
     transform: rotate(-45deg);
     left: 20px;
   }
   .next {
-    border-top: 4px solid ;
-    border-right: 4px solid ; 
+    border-top: 4px solid  #007aff;
+    border-right: 4px solid #007aff ; 
     transform: rotate(45deg);
     right: 20px;
   }
