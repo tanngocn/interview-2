@@ -15,7 +15,6 @@ function slide(wrapper, items, prev, next) {
     index = 0,
     allowShift = true;
 
-  // Clone first and last slide
   checkIndex();
   wrapper.classList.add("loaded");
 
@@ -23,9 +22,10 @@ function slide(wrapper, items, prev, next) {
   items.onmousedown = dragStart;
 
   // Touch events
-  items.addEventListener("touchstart", dragStart);
-  items.addEventListener("touchend", dragEnd);
-  items.addEventListener("touchmove", dragAction);
+  items.addEventListener("pointerdown", dragStart);
+  items.addEventListener("pointerup", dragEnd);
+  items.addEventListener("pointerleave", dragEnd);
+  items.addEventListener("pointermove", dragAction);
 
   // Click events
   prev.addEventListener("click", function () {
@@ -35,11 +35,8 @@ function slide(wrapper, items, prev, next) {
     shiftSlide(1);
   });
 
-  window.addEventListener("resize", () => {
-    slideSize = items.getElementsByClassName("slide")[0].clientWidth;
-    threshold = slideSize / 20;
-    items.style.left = -slideSize * index + "px";
-  });
+  
+  window.addEventListener("resize", startPositionIndex);
 
   // Transition events
   items.addEventListener("transitionend", checkIndex);
@@ -85,6 +82,13 @@ function slide(wrapper, items, prev, next) {
     document.onmousemove = null;
   }
 
+
+  function startPositionIndex(){
+    slideSize = items.getElementsByClassName("slide")[0].clientWidth;
+    threshold = slideSize / 20;
+    items.style.left = -slideSize * index + "px";
+  }
+
   function shiftSlide(dir, action) {
     items.classList.add("shifting");
     if (allowShift) {
@@ -95,18 +99,15 @@ function slide(wrapper, items, prev, next) {
         if (index !== slidesLength - 1) {
           items.style.left = posInitial - slideSize + "px";
           index++;
-        } else {
-          items.style.left = posInitial + "px";
-        }
+        } 
       } else if (dir == -1) {
         if (index !== 0) {
           items.style.left = posInitial + slideSize + "px";
           index--;
-        } else {
-          items.style.left = posInitial + "px";
-        }
+        } 
       }
     }
+    startPositionIndex();
     allowShift = false;
   }
 
