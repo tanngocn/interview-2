@@ -3,7 +3,6 @@ const slider = document.querySelector(".items"),
   prev = document.getElementById("prev"),
   next = document.getElementById("next");
 let slideSize = slider.offsetWidth;
-const wrapper = document.getElementById("items");
 
 // set up our state
 let isDragging = false,
@@ -24,7 +23,7 @@ slides.forEach((slide, index) => {
 });
 
 window.addEventListener("resize", startPositionIndex);
-wrapper.addEventListener("transitionend", checkIndex);
+slider.addEventListener("transitionend", checkIndex);
 
 // Click events
 prev.addEventListener("click", function () {
@@ -35,10 +34,10 @@ next.addEventListener("click", function () {
 });
 
 function shiftSlide(dir, action) {
-  wrapper.classList.add("shifting");
+  slider.classList.add("shifting");
   if (isDragging) {
     if (!action) {
-      posInitial = wrapper.offsetLeft;
+      posInitial = slider.offsetLeft;
     }
     if (dir == 1) {
       if (currentIndex !== slides.length - 1) {
@@ -68,7 +67,7 @@ function pointerDown(index) {
     startPos = event.clientX;
     isDragging = true;
     animationID = requestAnimationFrame(animation);
-    wrapper.classList.add("shifting");
+    slider.classList.add("shifting");
   };
 }
 
@@ -91,6 +90,7 @@ function pointerUp() {
   setPositionByIndex();
   
 }
+
 function checkIndex() {
   cancelAnimationFrame(animationID);
   isDragging = true;
@@ -110,7 +110,7 @@ function checkIndex() {
     prev.classList.remove("disabled");
   }
   //
-  wrapper.classList.remove("shifting");
+  slider.classList.remove("shifting");
 }
 
 function setPositionByIndex() {
@@ -118,6 +118,7 @@ function setPositionByIndex() {
   prevTranslate = currentTranslate;
   setSliderPosition();
 }
+
 function animation() {
   setSliderPosition();
   if (isDragging) requestAnimationFrame(animation);
