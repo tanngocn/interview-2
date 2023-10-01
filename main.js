@@ -20,7 +20,11 @@ function slide(wrapper, items, prev, next) {
 
   // Mouse and Touch events
   items.onmousedown = dragStart;
-
+  window.oncontextmenu = function (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    return false
+  }
   // Touch events
   items.addEventListener("pointerdown", dragStart);
   items.addEventListener("pointerup", dragEnd);
