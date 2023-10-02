@@ -3,16 +3,24 @@ const slider = document.querySelector(".items"),
   prev = document.getElementById("prev"),
   next = document.getElementById("next");
 let slideSize = slider.offsetWidth;
-
+const wrapper = document.getElementById("items");
 // set up our state
 let isDragging = false,
   startPos = 0,
   currentTranslate = 0,
   prevTranslate = 0,
   animationID,
-  threshold = slideSize / 10,
+  threshold = slideSize / 20,
   currentIndex = 0;
 checkIndex();
+
+// prevent menu popup on long press
+window.oncontextmenu = function (event) {
+  event.preventDefault()
+  event.stopPropagation()
+  return false
+}
+
 // add our event listeners
 slides.forEach((slide, index) => {
   // pointer events
@@ -23,18 +31,22 @@ slides.forEach((slide, index) => {
 });
 
 window.addEventListener("resize", startPositionIndex);
-slider.addEventListener("transitionend", checkIndex);
+wrapper.addEventListener("transitionend", checkIndex);
 
 // Click events
 prev.addEventListener("click", function () {
+  isDragging = true;
+
   shiftSlide(-1);
 });
 next.addEventListener("click", function () {
+  isDragging = true;
   shiftSlide(1);
+
 });
 
 function shiftSlide(dir, action) {
-  slider.classList.add("shifting");
+  wrapper.classList.add("shifting");
   if (isDragging) {
     if (!action) {
       posInitial = slider.offsetLeft;
@@ -51,7 +63,7 @@ function shiftSlide(dir, action) {
       }
     }
   }
-  isDragging = false;
+  isDragging=false; 
   setPositionByIndex();
 }
 
@@ -67,7 +79,7 @@ function pointerDown(index) {
     startPos = event.clientX;
     isDragging = true;
     animationID = requestAnimationFrame(animation);
-    slider.classList.add("shifting");
+    wrapper.classList.add("shifting");
   };
 }
 
@@ -87,13 +99,13 @@ function pointerUp() {
   // if moved enough positive then snap to previous slide if there is one
   if (movedBy > threshold && currentIndex > 0) shiftSlide(-1);
 
+  isDragging =false;
   setPositionByIndex();
   
 }
 
 function checkIndex() {
   cancelAnimationFrame(animationID);
-  isDragging = true;
 
   if (currentIndex === 0) {
     prev.classList.add("disabled");
@@ -110,7 +122,8 @@ function checkIndex() {
     prev.classList.remove("disabled");
   }
   //
-  slider.classList.remove("shifting");
+  setPositionByIndex();
+  wrapper.classList.remove("shifting");
 }
 
 function setPositionByIndex() {
@@ -126,4 +139,5 @@ function animation() {
 
 function setSliderPosition() {
   slider.style.left = `${currentTranslate}px`;
+  
 }
